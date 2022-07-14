@@ -1,45 +1,34 @@
 import psycopg2
-from parol_and_tokens import password
+from config import database, user, password, host, port
 
+class CandidatInBase():
+    """для внесения в базу данных"""
+    def __init__(self, database, user, password, host, port, str_response):
+        self.database = database
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = port
+        self.str_response = str_response
 
-con = psycopg2.connect(
-  database="postgres",
-  user="postgres",
-  password=password,
-  host="localhost",
-  port="5432")
+    @staticmethod
+    def insert_bd_candadets(str_response):
+        con = psycopg2.connect(
+            database=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port)
+        cur = con.cursor()
+        cur.execute(str_response)
+        con.commit()
 
-print("Database opened successfully")
-
-# создание таблицы
-# cur = con.cursor()
-# cur.execute(
-# '''CREATE TABLE Users_search1
-# (ID SERIAL PRIMARY KEY NOT NULL,
-# First_name TEXT NOT NULL,
-# Last_name TEXT NOT NULL,
-#              vk_id_user CHAR(50));'''
-#         )
-
-# cur.execute(
-# '''CREATE TABLE Candidates1
-# (ID SERIAL PRIMARY KEY NOT NULL,
-# First_name TEXT NOT NULL,
-# Last_name TEXT NOT NULL,
-# vk_id_user CHAR(50));'''
-#  )
-# print("Table created successfully")
-
-def insert_bd_candadets(str_response):
-    con = psycopg2.connect(
-        database="postgres",
-        user="postgres",
-        password="Parol444!@",
-        host="localhost",
-        port="5432")
-    cur = con.cursor()
-    cur.execute(str_response)
-    con.commit()
-
-def close_bd():
-    con.close()
+    @staticmethod
+    def close_bd():
+        con = psycopg2.connect(
+            database=database,
+            user=user,
+            password=password,
+            host=host,
+            port=port)
+        con.close()

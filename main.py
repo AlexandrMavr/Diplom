@@ -4,10 +4,8 @@ from random import randint
 from user_token import info_user
 from user_token import parametrs_candidates
 from user_token import photo_candidates_sort
-from Data_base_vk import insert_bd_candadets
-from Data_base_vk import close_bd
-from parol_and_tokens import community_token
-
+import Data_base_vk
+from config import password, database, user, host, port, community_token
 
 vk = vk_api.VkApi(token=community_token)
 session_api = vk.get_api()
@@ -40,8 +38,9 @@ for event in longpoll.listen():
                 b = z['items'][0]['last_name']
                 c = z['items'][0]['id']
                 str_response = f"INSERT INTO CANDIDATES1 (first_name, last_name, vk_id_user) VALUES (\'{a}\', \'{b}\', \'{c}\')"
-                insert_bd_candadets(str_response)
-                close_bd()
+                candidat = Data_base_vk.CandidatInBase(database, user, password, host, port, str_response)
+                candidat.insert_bd_candadets(str_response)
+                candidat.close_bd()
                 write_msg(event.user_id, "Вот она твоя мечта или нет?"
                                          f"https://vk.com/id{c}")
                 send_photo(event.user_id, 'Смотри какая фоточка', photo_candidates_sort(c)[-1][0])
